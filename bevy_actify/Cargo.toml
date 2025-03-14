@@ -4,7 +4,7 @@ version = { workspace = true }
 edition = { workspace = true }
 authors = { workspace = true }
 license = { workspace = true }
-description = "Derives macros for bevy_actify"
+description = "Input action plugin for Bevy"
 
 [features]
 derive = []
