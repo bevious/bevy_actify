@@ -20,18 +20,7 @@ use bevy::ecs::{
 ///
 /// ### Usage
 /// Use this type in systems that need to read the state
-/// of an input action. For example:
-/// ```rust
-/// fn debug_input_action_state<A: InputAction>(
-///     state: InputActionState<A>,
-/// ) {
-///     if let Some(value) = state.status() {
-///         println!("Input action is active with value: {:?}", value);
-///     } else {
-///         println!("Input action is idle.");
-///     }
-/// }
-/// ```
+/// of an input action.
 ///
 /// ### Notes
 /// - The state is updated every frame based on the values
@@ -139,18 +128,6 @@ impl<'w, A: InputAction> InputActionDrain<'w, A> {
     /// - If multiple systems pour states into the drain, only
     ///   the **last state** poured will be used to update the
     ///   `InputActionState`.
-    ///
-    /// ### Example
-    /// ```rust
-    /// fn keyboard_input_system(
-    ///     mut drain: InputActionDrain<MyAction>,
-    ///     keys: Res<Input<KeyCode>>,
-    /// ) {
-    ///     if keys.pressed(KeyCode::Space) {
-    ///         drain.pour(Jump); // Contribute a "Jump" action
-    ///     }
-    /// }
-    /// ```
     pub fn pour(&mut self, state: A) {
         self.inner.replace(state);
     }
