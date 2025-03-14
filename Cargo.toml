@@ -1,0 +1,6 @@
+[workspace]
+members = ["bevy_actify", "bevy_actify_derive"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
