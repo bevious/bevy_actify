@@ -11,4 +11,4 @@ derive = []
 
 [dependencies]
 bevy = { version = "0.15", default-features = false }
-bevy_actify_derive = { path = "../bevy_actify_derive" }
+bevy_actify_derive = { version = "0.1.0" }
