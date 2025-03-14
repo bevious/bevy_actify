@@ -1,6 +1,9 @@
 [workspace]
 members = ["bevy_actify", "bevy_actify_derive"]
+resolver = "3"
 
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
+license = "MIT"
+authors = ["iizudev"]

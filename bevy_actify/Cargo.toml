@@ -2,10 +2,13 @@
 name = "bevy_actify"
 version = { workspace = true }
 edition = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+description = "Derives macros for bevy_actify"
 
 [features]
 derive = []
 
 [dependencies]
 bevy = { version = "0.15", default-features = false }
-bevy_actify_macros = { path = "../bevy_actify_derive" }
+bevy_actify_derive = { path = "../bevy_actify_derive" }
