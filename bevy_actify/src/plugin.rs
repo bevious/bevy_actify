@@ -9,7 +9,7 @@ use bevy::{
     },
 };
 
-use crate::{InputAction, InputActionUpdated, internal};
+use crate::{InputAction, internal};
 
 /// Label for systems that update input actions.
 ///
@@ -54,7 +54,7 @@ impl<A: InputAction> Plugin for InputActionPlugin<A> {
         app.init_resource::<internal::InputActionState<A>>();
         app.init_resource::<internal::InputActionDrain<A>>();
 
-        app.add_event::<InputActionUpdated<A>>();
+        app.add_event::<internal::InputActionUpdated<A>>();
 
         app.add_systems(
             PreUpdate,
@@ -114,7 +114,7 @@ fn update_input_action_state<A: InputAction>(
 ///
 fn write_input_action_events<A: InputAction>(
     mut local: Local<Option<A>>,
-    mut event: EventWriter<InputActionUpdated<A>>,
+    mut event: EventWriter<internal::InputActionUpdated<A>>,
     state: Res<internal::InputActionState<A>>,
 ) {
     let state = match state.as_ref() {
@@ -125,14 +125,14 @@ fn write_input_action_events<A: InputAction>(
     match (&*local, state) {
         (None, None) => {}
         (None, Some(value)) => {
-            event.send(InputActionUpdated::Started(value.clone()));
+            event.send(internal::InputActionUpdated::Started(value.clone()));
         }
         (Some(_), None) => {
-            event.send(InputActionUpdated::Stopped);
+            event.send(internal::InputActionUpdated::Stopped);
         }
         (Some(previous), Some(next)) => {
             if previous != next {
-                event.send(InputActionUpdated::Updated(next.clone()));
+                event.send(internal::InputActionUpdated::Updated(next.clone()));
             }
         }
     };
