@@ -1,0 +1,23 @@
+on:
+  push:
+    tags:
+      - '*'
+
+name: Publish
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Test
+      run: cargo test --verbose
+    - name: Auth
+      run: cargo login ${{ secrets.CRATES_TOKEN }}
+    - name: Publish (bevy_actify)
+      run: cargo publish -p bevy_actify
+    - name: Publish (bevy_actify_derive)
+      run: cargo publish -p bevy_actify_derive
