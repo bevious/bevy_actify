@@ -5,10 +5,7 @@ pub use plugin::{InputActionPlugin, InputActionSystem};
 #[cfg(feature = "derive")]
 pub use bevy_actify_derive::InputAction;
 
-use bevy::ecs::{
-    event::Event,
-    system::{Res, ResMut, SystemParam},
-};
+use bevy::ecs::system::{Res, ResMut, SystemParam};
 
 /// Provides read-only access to the current state of an
 /// input action.
