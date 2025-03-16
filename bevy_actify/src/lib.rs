@@ -56,25 +56,6 @@ pub struct InputActionDrain<'w, A: InputAction> {
     inner: ResMut<'w, internal::InputActionDrain<A>>,
 }
 
-/// Input action update event.
-///
-/// This event is written when state of the input action
-/// changes.
-///
-/// ### Example
-/// - **`Started`**: written when input action transitions
-///   from `Idle` to `Active`.
-/// - **`Updated`**: written when input action had already
-///   been `Active`, but the state of it has changed.
-/// - **`Stopped`**: written when input action transitions
-///   from `Active` to `Idle`.
-#[derive(Event, Debug)]
-pub enum InputActionUpdated<A: InputAction> {
-    Started(A),
-    Updated(A),
-    Stopped,
-}
-
 pub trait InputAction: Send + Sync + Clone + PartialEq + 'static {}
 
 impl<'w, A: InputAction> InputActionState<'w, A> {
@@ -136,7 +117,7 @@ impl<'w, A: InputAction> InputActionDrain<'w, A> {
 pub(crate) mod internal {
     use std::ops::{Deref, DerefMut};
 
-    use bevy::ecs::system::Resource;
+    use bevy::ecs::{event::Event, system::Resource};
 
     use crate::InputAction;
 
@@ -172,6 +153,17 @@ pub(crate) mod internal {
     ///   is read to update the [`InputActionState`].
     #[derive(Resource, Debug)]
     pub struct InputActionDrain<A: InputAction>(Option<A>);
+
+    /// Input action update event.
+    ///
+    /// This event is written when state of the input action
+    /// changes.
+    #[derive(Event, Debug)]
+    pub enum InputActionUpdated<A: InputAction> {
+        Started(A),
+        Updated(A),
+        Stopped,
+    }
 
     impl<A: InputAction> Default for InputActionState<A> {
         fn default() -> Self {
