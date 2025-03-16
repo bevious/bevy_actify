@@ -6,6 +6,8 @@
 </p>
 <hr />
 
+[![Following released Bevy versions](https://img.shields.io/badge/Bevy%20tracking-released%20version-lightblue)](https://bevyengine.org/learn/quick-start/plugin-development/#main-branch-tracking)
+
 This plugin provides a unified way to handle input actions, allowing
 developers to decouple game logic from specific input sources like keyboards,
 gamepads, or touchscreens. Instead of hardcoding input details, you define
