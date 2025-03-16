@@ -74,6 +74,7 @@ pub struct InputActionDrain<'w, A: InputAction> {
 /// - **`Stopped`**: The input action has transitioned from
 ///   `Active` to `Idle`. This variant does not contain
 ///   additional data, as the action is no longer active.
+#[derive(Debug)]
 pub enum InputActionStatus<'e, A: InputAction> {
     Started(&'e A),
     Updated(&'e A),
