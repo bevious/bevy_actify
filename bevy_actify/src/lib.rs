@@ -5,7 +5,10 @@ pub use plugin::{InputActionPlugin, InputActionSystem};
 #[cfg(feature = "derive")]
 pub use bevy_actify_derive::InputAction;
 
-use bevy::ecs::system::{Res, ResMut, SystemParam};
+use bevy::{
+    ecs::system::{Res, ResMut, SystemParam},
+    prelude::EventReader,
+};
 
 /// Provides read-only access to the current state of an
 /// input action.
@@ -51,6 +54,39 @@ pub struct InputActionState<'w, A: InputAction> {
 #[derive(SystemParam, Debug)]
 pub struct InputActionDrain<'w, A: InputAction> {
     inner: ResMut<'w, internal::InputActionDrain<A>>,
+}
+
+/// Represents the status of an input action as read
+/// from an [`InputActionReader`].
+///
+/// This enum describes the lifecycle of an input action,
+/// indicating whether it has just started, been updated,
+/// or stopped. It is typically used to react to changes
+/// in input state in a structured way.
+///
+/// ### Variants
+/// - **`Started(A)`**: The input action has transitioned
+///   from `Idle` to `Active`. This variant contains the
+///   current state of the input action (`A`).
+/// - **`Updated(A)`**: The input action was already `Active`,
+///   but its state has changed. This variant contains the
+///   updated state of the input action (`A`).
+/// - **`Stopped`**: The input action has transitioned from
+///   `Active` to `Idle`. This variant does not contain
+///   additional data, as the action is no longer active.
+pub enum InputActionStatus<'e, A: InputAction> {
+    Started(&'e A),
+    Updated(&'e A),
+    Stopped,
+}
+
+/// Reader for input action status updates.
+///
+/// This system param provides an event-like way to react to
+/// changes in input actions.
+#[derive(SystemParam, Debug)]
+pub struct InputActionReader<'w, 's, A: InputAction> {
+    inner: EventReader<'w, 's, internal::InputActionUpdated<A>>,
 }
 
 pub trait InputAction: Send + Sync + Clone + PartialEq + 'static {}
@@ -108,6 +144,33 @@ impl<'w, A: InputAction> InputActionDrain<'w, A> {
     ///   `InputActionState`.
     pub fn pour(&mut self, state: A) {
         self.inner.replace(state);
+    }
+}
+
+impl<'e, A: InputAction> From<&'e internal::InputActionUpdated<A>> for InputActionStatus<'e, A> {
+    fn from(value: &'e internal::InputActionUpdated<A>) -> Self {
+        match value {
+            internal::InputActionUpdated::Started(state) => Self::Started(state),
+            internal::InputActionUpdated::Updated(state) => Self::Updated(state),
+            internal::InputActionUpdated::Stopped => Self::Stopped,
+        }
+    }
+}
+
+impl<'w, 's, A: InputAction> InputActionReader<'w, 's, A> {
+    /// see [`EventReader::read`](bevy::ecs::event::EventReader::read).
+    pub fn read(&mut self) -> impl ExactSizeIterator<Item = InputActionStatus<A>> {
+        self.inner.read().map(|event| event.into())
+    }
+
+    /// see [`EventReader::is_empty`](bevy::ecs::event::EventReader::is_empty).
+    pub fn is_empty(&self) -> bool {
+        self.inner.is_empty()
+    }
+
+    /// see [`EventReader::clear`](bevy::ecs::event::EventReader::clear).
+    pub fn clear(&mut self) {
+        self.inner.clear()
     }
 }
 
