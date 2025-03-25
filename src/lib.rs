@@ -1,3 +1,4 @@
+#[cfg(feature = "derive")]
 pub use bevy_actify_derive::InputAction;
 
 use std::marker::PhantomData;
