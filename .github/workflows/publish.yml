@@ -1,7 +1,7 @@
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
 
 name: Publish
 
@@ -12,12 +12,25 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
+    - name: Get version
+      id: version
+      run: |
+        echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+        echo "Version extracted: ${{ env.VERSION }}"
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        override: true
+    - name: Check version consistency
+      run: |
+        CARGO_VERSION=$(grep -m1 '^version =' Cargo.toml | cut -d '"' -f2)
+        if [ "$CARGO_VERSION" != "${{ env.VERSION }}" ]; then
+          echo "Version mismatch: Cargo.toml has $CARGO_VERSION but tag is ${{ env.VERSION }}"
+          exit 1
+        fi
     - uses: actions/checkout@v4
     - name: Test
       run: cargo test --verbose
-    - name: Auth
-      run: cargo login ${{ secrets.CRATES_TOKEN }}
-    - name: Publish (bevy_actify)
-      run: cargo publish -p bevy_actify
-    - name: Publish (bevy_actify_derive)
-      run: cargo publish -p bevy_actify_derive
+    - name: Publish
+      run: cargo publish --token ${{ secrets.CRATES_IO_TOKEN }}
