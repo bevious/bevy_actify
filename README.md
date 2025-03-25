@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/iizudev/bevy_actify/blob/main/logo.png?raw=true" width="250" />
+  <img src="https://github.com/bevious/bevy_actify/blob/main/logo.png?raw=true" width="250" />
 </p>
 <p align="center">
   An input action plugin for <a href="https://bevyengine.org/"><strong>Bevy</strong></a>
