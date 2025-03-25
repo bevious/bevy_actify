@@ -45,40 +45,6 @@ pub struct InputActionSystem;
 /// [`PreUpdate`](bevy::app::PreUpdate) and read its state
 /// via either [`InputActionState`] or [`InputActionReader`]
 /// after [`InputActionSystem`].
-///
-/// ### Example
-/// ```rust
-/// # use bevy::{prelude::*, input::InputSystem};
-/// # use bevy_actify::*;
-///
-/// #[derive(InputAction, PartialEq, Clone)]
-/// struct Jump;
-///
-/// # fn main() {
-/// App::new()
-///    .add_plugins(
-///        (
-///            DefaultPlugins,
-///            InputActionPlugin::<Jump>::new(),
-///        ),
-///    )
-///    .add_systems(
-///        PreUpdate,
-///        // this system reads keyboard input and
-///        // writes it into the drain.
-///        keyboard_jump
-///            .after(InputSystem)
-///            .before(InputActionSystem),
-///    )
-///    .run();
-/// # }
-///
-/// fn keyboard_jump(keyboard: Res<ButtonInput<KeyCode>>, mut action: InputActionDrain<Jump>) {
-///     if keyboard.pressed(KeyCode::Space) {
-///         action.pour(Jump);
-///     }
-/// }
-/// ```
 pub struct InputActionPlugin<A: InputAction> {
     _marker: PhantomData<A>,
 }
