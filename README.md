@@ -16,18 +16,22 @@ abstract input actions (e.g., "Jump", "Attack") and map them to any input
 source.
 
 ## How to use
+
 First things first you need to add this plugin as a dependency to your project by running:
+
 ```bash
 cargo add bevy_actify
 ```
 
 or by manually adding it to your `Cargo.toml`'s `dependencies` section:
+
 ```toml
 # refer to https://crates.io/crates/bevy_actify for the latest version
 bevy_actify = { version = "*" }
 ```
 
 ### Usage
+
 ```rust
 use bevy::{input::InputSystem, prelude::*};
 use bevy_actify::*;
@@ -62,7 +66,17 @@ fn print_my_action(mut action: InputActionReader<MyAction>) {
 }
 ```
 
+## License
+
+This project is dual-licensed under:
+
+- [MIT License](LICENSE-MIT)
+- [Apache 2.0 License](LICENSE-APACHE-2.0)
+
+You may choose either license at your option.
+
 ## How to contribute
+
 Fork repository, make changes, send us a pull request. We will review your
 changes and apply them to the master branch shortly, provided they don't
 violate our quality standards.

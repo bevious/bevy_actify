@@ -2,8 +2,8 @@
 name = "bevy_actify"
 version = "0.2.0"
 edition = "2024"
-license = "MIT"
-authors = ["iizudev"]
+authors = ["iizudev <izudev@yandex.ru>"]
+license = "MIT OR Apache-2.0"
 
 [features]
 default = ["derive"]
