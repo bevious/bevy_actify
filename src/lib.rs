@@ -2,9 +2,6 @@ pub mod plugin;
 
 pub use plugin::{InputActionPlugin, InputActionSystem};
 
-#[cfg(feature = "derive")]
-pub use bevy_actify_derive::InputAction;
-
 use bevy::{
     ecs::system::{Res, ResMut, SystemParam},
     prelude::EventReader,
