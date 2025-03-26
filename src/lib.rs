@@ -1,5 +1,48 @@
 //! SPDX-License-Identifier: MIT OR Apache-2.0
-#![doc = include_str!("../README.md")]
+//!
+//! A flexible and ergonomic input action system for Bevy.
+//!
+//! This library provides a structured way to handle input actions in Bevy,
+//! allowing you to define abstract input actions that can be mapped from
+//! various input sources (keyboard, mouse, gamepad, etc.) and consumed
+//! by game systems in a consistent way.
+//!
+//! # Features
+//!
+//! - **Input Action Abstraction**: Define abstract input actions separate
+//!   from concrete inputs
+//! - **State Management**: Track whether actions are active/idle and their
+//!   current values
+//! - **Event-like System**: React to action starts, updates, and stops
+//! - **Multi-source Input**: Combine inputs from multiple sources into a
+//!   single action state
+//! - **Conditional Systems**: Feature-gated helpers for common input conditions
+//!
+//! # Core Concepts
+//!
+//! - **`InputAction`**: A trait representing an abstract input action
+//! - **`InputActionPlugin`**: Registers an action and its systems
+//! - **`InputActionState`**: Read the current state of an action
+//! - **`InputActionDrain`**: Write action state from input systems
+//! - **`InputActionReader`**: React to changes in action state
+//!
+//! # Basic Usage
+//!
+//! 1. Define your input action type (must implement `InputAction`)
+//! 2. Add the `InputActionPlugin` for your type
+//! 3. Write input systems that pour values into the `InputActionDrain`
+//! 4. Read the action state using `InputActionState` (or `InputActionReader`
+//!    for status updates)
+//!
+//! # System Ordering
+//!
+//! - Systems that write to `InputActionDrain` should run **before**
+//!   `InputActionSystem`
+//! - Systems that read from `InputActionState` typically run in
+//!   `Update` (after `PreUpdate`)
+#![cfg_attr(docsrs, feature(doc_auto_cfg))]
+#![forbid(unsafe_code)]
+#![warn(missing_docs)]
 
 #[cfg(feature = "conditions")]
 pub mod conditions;
@@ -123,8 +166,14 @@ pub struct InputActionDrain<'w, A: InputAction> {
 ///   additional data, as the action is no longer active.
 #[derive(Debug)]
 pub enum InputActionStatus<'e, A: InputAction> {
+    /// The input action has started at this frame.
     Started(&'e A),
+
+    /// The input action had been active, but changed
+    /// the value.
     Updated(&'e A),
+
+    /// The input action has stopped at this frame.
     Stopped,
 }
 
@@ -137,6 +186,7 @@ pub struct InputActionReader<'w, 's, A: InputAction> {
     inner: EventReader<'w, 's, internal::InputActionUpdated<A>>,
 }
 
+/// Marker trait for all input actions.
 pub trait InputAction: Send + Sync + Clone + PartialEq + 'static {}
 
 impl<A: InputAction> InputActionPlugin<A> {
