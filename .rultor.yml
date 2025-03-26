@@ -4,6 +4,9 @@ assets:
   crates-io.env: iizudev/.rultor#crates-io.env
 install: |
   source /home/r/crates-io.env
+merge:
+  script: |
+    cargo test --lib --verbose
 release:
   script: |
     [[ "${tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
