@@ -2,9 +2,10 @@ architect:
   - iizudev
 assets:
   crates-io.env: iizudev/.rultor#crates-io.env
+env:
+  CARGO_TERM_COLOR: never
 install: |
   source /home/r/crates-io.env
-  CARGO_TERM_COLOR=never
 merge:
   script: |
     cargo test --lib --verbose
