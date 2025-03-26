@@ -4,6 +4,7 @@ version = "0.3.0"
 edition = "2024"
 authors = ["iizudev <izudev@yandex.ru>"]
 license = "MIT OR Apache-2.0"
+description = "An input action plugin for Bevy"
 repository = "https://github.com/bevious/bevy_actify"
 categories = ["game-development"]
 keywords = ["gamedev", "bevy-plugin", "input"]
