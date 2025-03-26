@@ -10,8 +10,9 @@ categories = ["game-development"]
 keywords = ["gamedev", "bevy-plugin", "input"]
 
 [features]
-default = ["derive"]
+default = ["derive", "conditions"]
 derive = ["dep:bevy_actify_derive"]
+conditions = []
 
 [dependencies]
 bevy = { version = "0.15", default-features = false }

@@ -1,6 +1,9 @@
 //! SPDX-License-Identifier: MIT OR Apache-2.0
 #![doc = include_str!("../README.md")]
 
+#[cfg(feature = "conditions")]
+pub mod conditions;
+
 #[cfg(feature = "derive")]
 pub use bevy_actify_derive::InputAction;
 
