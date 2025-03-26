@@ -7,6 +7,11 @@ pub mod conditions;
 #[cfg(feature = "derive")]
 pub use bevy_actify_derive::InputAction;
 
+#[cfg(feature = "conditions")]
+pub use conditions::{
+    input_action_active, input_action_started, input_action_stopped, input_action_updated,
+};
+
 use std::marker::PhantomData;
 
 use bevy::{
