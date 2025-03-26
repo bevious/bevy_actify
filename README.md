@@ -29,6 +29,9 @@ Raw input handling leads to:
 ## How to use
 
 ```rust
+use bevy::{prelude::*, input::InputSystem};
+use bevy_actify::*;
+
 // 1. Define your action
 #[derive(InputAction, Clone, PartialEq)]
 struct Jump(f32); // f32 for analog sensetivity
@@ -46,6 +49,16 @@ fn character_jump(action: InputActionState<Jump>) {
         let jump_power = state.0;
         // Apply force...
     }
+}
+
+// 4. Register the plugin and systems
+fn main() {
+  App::new()
+    .add_plugins(DefaultPlugins)
+    .add_plugins(InputActionPlugin::<Jump>::new())
+    .add_systems(PreUpdate, keyboard_input.after(InputSystem).before(InputActionSystem)) // properly order you systems to avoid 1 frame delay!
+    .add_systems(Update, character_jump)
+    .run();
 }
 ```
 
