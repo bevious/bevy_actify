@@ -14,24 +14,27 @@ pub fn input_action_active<A: InputAction>(action: InputActionState<A>) -> bool 
 
 /// Returns `true` if the input action [`A`] has just started.
 pub fn input_action_started<A: InputAction>(mut action: InputActionReader<A>) -> bool {
-    action
+    let has_started = action
         .read()
-        .last()
-        .map_or(false, |a| matches!(a, InputActionStatus::Started(_)))
+        .any(|status| matches!(status, InputActionStatus::Started(_)));
+    action.clear();
+    has_started
 }
 
 /// Returns `true` if the input action [`A`] has just updated.
 pub fn input_action_updated<A: InputAction>(mut action: InputActionReader<A>) -> bool {
-    action
+    let has_updated = action
         .read()
-        .last()
-        .map_or(false, |a| matches!(a, InputActionStatus::Updated(_)))
+        .any(|status| matches!(status, InputActionStatus::Updated(_)));
+    action.clear();
+    has_updated
 }
 
 /// Returns `true` if the input action [`A`] has just stopped.
 pub fn input_action_stopped<A: InputAction>(mut action: InputActionReader<A>) -> bool {
-    action
+    let has_stopped = action
         .read()
-        .last()
-        .map_or(false, |a| matches!(a, InputActionStatus::Stopped))
+        .any(|status| matches!(status, InputActionStatus::Stopped));
+    action.clear();
+    has_stopped
 }
