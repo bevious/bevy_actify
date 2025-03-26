@@ -4,6 +4,7 @@ assets:
   crates-io.env: iizudev/.rultor#crates-io.env
 install: |
   source /home/r/crates-io.env
+  CARGO_TERM_COLOR=never
 merge:
   script: |
     cargo test --lib --verbose
