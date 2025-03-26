@@ -1,10 +1,13 @@
 architect:
   - iizudev
+assets:
+  crates-io.env: iizudev/.rultor#crates-io.env
+install: |
+  source /home/r/crates-io.env
 release:
   script: |
     [[ "${tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
     VERSION="${tag#v}"
-    git checkout -b "release-${tag}"
 
     sed -i.bak "s/^version = .*/version = \"${VERSION}\"/" Cargo.toml && rm Cargo.toml.bak
     grep -q "version = \"${VERSION}\"" Cargo.toml
@@ -13,6 +16,4 @@ release:
     git commit -m "bump version to ${VERSION}" || echo "nothing to commit?"
 
     cargo test --lib --verbose
-
-    git checkout main
-    git merge --no-ff "release-${tag}" -m "release ${VERSION}"
+    cargo publish --token ${IIZUDEV_CRATES_IO_TOKEN}
