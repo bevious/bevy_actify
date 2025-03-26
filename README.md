@@ -2,69 +2,59 @@
   <img src="https://github.com/bevious/bevy_actify/blob/main/logo.png?raw=true" width="250" />
 </p>
 <p align="center">
-  An input action plugin for <a href="https://bevyengine.org/"><strong>Bevy</strong></a>
+  An input action plugin for <a href="https://bevyengine.org/"><strong>Bevy</strong></a><br />
 </p>
 <hr />
+<p align="center">
+  <a href="https://crates.io/crates/bevy_actify">
+    <img alt="crates.io" src="https://img.shields.io/crates/v/bevy_actify" />
+  </a>
+  <img alt="License: MIT OR Apache-2.0" src="https://img.shields.io/badge/license-MIT%2FApache--2.0-blue" />
+  <img alt="Bevy version: 0.15" src="https://img.shields.io/badge/Bevy-0.15-pink" />
+  <a href="https://github.com/bevious/bevy_actify/actions/workflows/test.yml">
+    <img alt="Action: Test" src="https://github.com/bevious/bevy_actify/actions/workflows/test.yml/badge.svg" />
+  </a>
+</p>
 
-[![crates.io](https://img.shields.io/crates/v/bevy_actify)](https://crates.io/crates/bevy_actify)
-[![Following released Bevy versions](https://img.shields.io/badge/Bevy%20tracking-released%20version-lightblue)](https://bevyengine.org/learn/quick-start/plugin-development/#main-branch-tracking)
+A tiny abstraction layer for input handling in [Bevy](https://bevyengine.org/) that ecouples
+input sources from game logic through clean action-based interfaces.
 
-This plugin provides a unified way to handle input actions, allowing
-developers to decouple game logic from specific input sources like keyboards,
-gamepads, or touchscreens. Instead of hardcoding input details, you define
-abstract input actions (e.g., "Jump", "Attack") and map them to any input
-source.
+## Problem
+
+Raw input handling leads to:
+- Tight coupling between devices and game logic
+- Code duplication across input methods
+- Messy state management
 
 ## How to use
 
-First things first you need to add this plugin as a dependency to your project by running:
-
-```bash
-cargo add bevy_actify
-```
-
-or by manually adding it to your `Cargo.toml`'s `dependencies` section:
-
-```toml
-# refer to https://crates.io/crates/bevy_actify for the latest version
-bevy_actify = { version = "*" }
-```
-
-### Usage
-
 ```rust
-use bevy::{input::InputSystem, prelude::*};
-use bevy_actify::*;
+// 1. Define your action
+#[derive(InputAction, Clone, PartialEq)]
+struct Jump(f32); // f32 for analog sensetivity
 
-#[derive(InputAction, Clone, PartialEq, Debug)]
-struct MyAction;
-
-fn main() {
-    App::new()
-        .add_plugins((DefaultPlugins, InputActionPlugin::<MyAction>::new()))
-        .add_systems(
-            PreUpdate,
-            keyboard_to_my_action
-                .after(InputSystem)
-                .before(InputActionSystem),
-        )
-        .add_systems(Update, print_my_action)
-        .run();
-}
-
-fn keyboard_to_my_action(
-    keyboard: Res<ButtonInput<KeyCode>>,
-    mut action: InputActionDrain<MyAction>,
-) {
-    if keyboard.pressed(KeyCode::KeyF) {
-        action.pour(MyAction);
+// 2. Map inputs to actions
+fn keyboard_input(keyboard: Res<ButtonInput<KeyCode>>, mut action: InputActionDrain<Jump>) {
+    if keyboard.pressed(KeyCode::Space) {
+        action.pour(Jump(1f32));
     }
 }
 
-fn print_my_action(mut action: InputActionReader<MyAction>) {
-    action.read().for_each(|a| println!("action: {:#?}", a));
+// 3. Use in game systems
+fn character_jump(action: InputActionState<Jump>) {
+    if let Some(state) = action.state() {
+        let jump_power = state.0;
+        // Apply force...
+    }
 }
 ```
+
+## How to contribute
+
+Fork repository, make changes, and send us a pull request.
+
+We will review your changes and apply them to the main
+branch shortly, provided they don't violate our quality standards.
 
 ## License
 
@@ -74,9 +64,3 @@ This project is dual-licensed under:
 - [Apache 2.0 License](LICENSE-APACHE-2.0)
 
 You may choose either license at your option.
-
-## How to contribute
-
-Fork repository, make changes, send us a pull request. We will review your
-changes and apply them to the master branch shortly, provided they don't
-violate our quality standards.

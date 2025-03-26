@@ -1,3 +1,10 @@
+//! SPDX-License-Identifier: MIT OR Apache-2.0
+//!
+//! Condition helpers for checking input action states.
+//!
+//! These functions provide convenient ways to check the state of input actions
+//! in Bevy systems, particularly useful for system conditions.
+
 use crate::{InputAction, InputActionReader, InputActionState, InputActionStatus};
 
 /// Returns `true` if the input action [`A`] is active.
