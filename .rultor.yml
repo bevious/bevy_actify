@@ -4,11 +4,13 @@ assets:
   crates-io.env: iizudev/.rultor#crates-io.env
 env:
   CARGO_TERM_COLOR: never
+  RUSTFLAGS: -Dwarnings
 install: |
   source /home/r/crates-io.env
 merge:
   script: |
-    cargo test --lib --verbose
+    cargo test --lib --all-features --verbose
+    cargo clippy --all-targets --all-features
 release:
   script: |
     [[ "${tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
@@ -20,5 +22,5 @@ release:
     git add Cargo.toml
     git commit -m "bump version to ${VERSION}" || echo "nothing to commit?"
 
-    cargo test --lib --verbose
+    cargo test --lib --all-features --verbose
     cargo publish --token ${IIZUDEV_CRATES_IO_TOKEN}
