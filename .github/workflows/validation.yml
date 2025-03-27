@@ -1,4 +1,4 @@
-name: Test
+name: Validation
 
 on:
   push:
