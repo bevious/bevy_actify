@@ -223,7 +223,7 @@ impl<A: InputAction> Plugin for InputActionPlugin<A> {
     }
 }
 
-impl<'w, A: InputAction> InputActionState<'w, A> {
+impl<A: InputAction> InputActionState<'_, A> {
     /// Returns whether the input action is currently active.
     pub fn is_active(&self) -> bool {
         matches!(self.inner.as_ref(), internal::InputActionState::Active(_))
@@ -253,7 +253,7 @@ impl<'w, A: InputAction> InputActionState<'w, A> {
     }
 }
 
-impl<'w, A: InputAction> InputActionDrain<'w, A> {
+impl<A: InputAction> InputActionDrain<'_, A> {
     /// Pours (writes) a state into the input action drain.
     ///
     /// This method is used to contribute a state to the input action
@@ -289,7 +289,7 @@ impl<'e, A: InputAction> From<&'e internal::InputActionUpdated<A>> for InputActi
     }
 }
 
-impl<'w, 's, A: InputAction> InputActionReader<'w, 's, A> {
+impl<A: InputAction> InputActionReader<'_, '_, A> {
     /// see [`EventReader::read`](bevy::ecs::event::EventReader::read).
     pub fn read(&mut self) -> impl ExactSizeIterator<Item = InputActionStatus<A>> {
         self.inner.read().map(|event| event.into())
