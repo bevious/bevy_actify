@@ -279,20 +279,14 @@ impl<A: InputAction> InputActionDrain<'_, A> {
     }
 }
 
-impl<'e, A: InputAction> From<&'e internal::InputActionUpdated<A>> for InputActionStatus<'e, A> {
-    fn from(value: &'e internal::InputActionUpdated<A>) -> Self {
-        match value {
-            internal::InputActionUpdated::Started(state) => Self::Started(state),
-            internal::InputActionUpdated::Updated(state) => Self::Updated(state),
-            internal::InputActionUpdated::Stopped => Self::Stopped,
-        }
-    }
-}
-
 impl<A: InputAction> InputActionReader<'_, '_, A> {
     /// see [`EventReader::read`](bevy::ecs::event::EventReader::read).
     pub fn read(&mut self) -> impl ExactSizeIterator<Item = InputActionStatus<A>> {
-        self.inner.read().map(|event| event.into())
+        self.inner.read().map(|event| match event {
+            internal::InputActionUpdated::Started(state) => InputActionStatus::Started(state),
+            internal::InputActionUpdated::Updated(state) => InputActionStatus::Updated(state),
+            internal::InputActionUpdated::Stopped => InputActionStatus::Stopped,
+        })
     }
 
     /// see [`EventReader::is_empty`](bevy::ecs::event::EventReader::is_empty).
