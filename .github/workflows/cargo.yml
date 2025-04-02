@@ -18,6 +18,7 @@ jobs:
         os: [ubuntu-24.04, macos-15, windows-2022]
     steps:
       - uses: actions/checkout@v4
+      - run: rustup update stable && rustup default stable
       - name: test (dev)
         run: cargo test --lib --all-features
       - name: test (release)
