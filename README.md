@@ -29,6 +29,36 @@ Raw input handling leads to:
 
 ## How to use
 
+### Basics
+
+#### InputActionDrain
+
+`InputActionDrain` is a system parameter, that is the *vassel* into which the systems *pour* input action state.
+
+For example a system would read keyboard input and *pour* the state into the appropriate
+`InputActionDrain`.
+
+#### InputActionState
+
+`InputActionState` is a system parameter, that is the source of current input action state. The gameplay system
+(i.e. movement, jump) would read the input action state from this.
+
+#### InputActionReader
+
+`InputActionReader` is a system parameter, that provides an event based interface, similar to `EventReader` (actually it
+uses an event reader under the hood). The read values are of type `InputActionStatus`—an `InputActionStatus` can be one of:
+- `Started` when the input action has just started to be active,
+- `Updated` when the input action has already been active, but the value has changed,
+- `Stopped` when the input action had been active, but now is not.
+
+### Run conditions
+
+This library provides several input action based system run conditions. Those are:
+- `input_action_active`: The system will run each frame the input action is active
+- `input_action_started`: Similar to `ButtonInput`'s `just_pressed`—will make your system run at the frame on which the action has started
+- `input_action_updated`: The system will run if the state of an input action has changed (i.e. an axis changed direction)
+- `input_action_stopped`: The system will run once the input action gets stopped (i.e. a button has been released)
+
 ### Example
 
 ```rust
