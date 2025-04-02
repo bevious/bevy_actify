@@ -58,7 +58,7 @@ pub use conditions::{
 use std::marker::PhantomData;
 
 use bevy::{
-    app::{App, Plugin, PreUpdate},
+    app::{App, Plugin, PreUpdate, SubApp},
     ecs::{
         event::{EventReader, EventWriter},
         schedule::{IntoSystemConfigs, SystemSet},
@@ -188,6 +188,37 @@ pub struct InputActionReader<'w, 's, A: InputAction> {
 
 /// Marker trait for all input actions.
 pub trait InputAction: Send + Sync + Clone + PartialEq + 'static {}
+
+/// Extension trait for [`App`] and [`SubApp`].
+pub trait InputActionAppExt {
+    /// Adds the input action to the app.
+    fn add_input_action<A: InputAction>(&mut self);
+}
+
+impl InputActionAppExt for SubApp {
+    fn add_input_action<A: InputAction>(&mut self) {
+        self.init_resource::<internal::InputActionState<A>>();
+        self.init_resource::<internal::InputActionDrain<A>>();
+
+        self.add_event::<internal::InputActionUpdated<A>>();
+
+        self.add_systems(
+            PreUpdate,
+            (
+                update_input_action_state::<A>,
+                write_input_action_events::<A>,
+            )
+                .chain()
+                .in_set(InputActionSystem),
+        );
+    }
+}
+
+impl InputActionAppExt for App {
+    fn add_input_action<A: InputAction>(&mut self) {
+        self.main_mut().add_input_action::<A>();
+    }
+}
 
 impl<A: InputAction> InputActionPlugin<A> {
     /// Returns a new input action plugin.
