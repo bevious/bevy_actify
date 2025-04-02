@@ -29,9 +29,11 @@ Raw input handling leads to:
 
 ## How to use
 
+### Example
+
 ```rust
 use bevy::{prelude::*, input::InputSystem};
-use bevy_actify::*;
+use bevy_actify::prelude::*;
 
 // 1. Define your action
 #[derive(InputAction, Clone, PartialEq)]
@@ -56,8 +58,8 @@ fn character_jump(action: InputActionState<Jump>) {
 fn main() {
   App::new()
     .add_plugins(DefaultPlugins)
-    .add_plugins(InputActionPlugin::<Jump>::new())
-    .add_systems(PreUpdate, keyboard_input.after(InputSystem).before(InputActionSystem)) // properly order you systems to avoid 1 frame delay!
+    .add_input_action::<Jump>()
+    .add_systems(PreUpdate, keyboard_input.after(InputSystem).before(InputActionSystem)) // properly order your systems to avoid 1 frame delay!
     .add_systems(Update, character_jump)
     .run();
 }

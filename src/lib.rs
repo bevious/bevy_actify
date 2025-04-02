@@ -55,16 +55,23 @@ pub use conditions::{
     input_action_active, input_action_started, input_action_stopped, input_action_updated,
 };
 
-use std::marker::PhantomData;
-
 use bevy::{
-    app::{App, Plugin, PreUpdate},
+    app::{App, PreUpdate, SubApp},
     ecs::{
         event::{EventReader, EventWriter},
         schedule::{IntoSystemConfigs, SystemSet},
         system::{Local, Res, ResMut, SystemParam},
     },
 };
+
+/// This module re-exports all necessary things
+/// to work with an input action.
+pub mod prelude {
+    pub use super::{
+        InputAction, InputActionAppExt, InputActionDrain, InputActionReader, InputActionState,
+        InputActionStatus, InputActionSystem,
+    };
+}
 
 /// Label for systems that update input actions.
 ///
@@ -83,22 +90,6 @@ use bevy::{
 /// schedule, which already runs *after*.
 #[derive(SystemSet, Hash, PartialEq, Eq, Clone, Debug)]
 pub struct InputActionSystem;
-
-/// Plugin that adds the input action `A` to an
-/// app.
-///
-/// This will register the resources and systems
-/// required for an input action to fully function.
-///
-/// ### Usage
-/// You can contribute to the input action via
-/// [`InputActionDrain`] before [`InputActionSystem`] in
-/// [`PreUpdate`](bevy::app::PreUpdate) and read its state
-/// via either [`InputActionState`] or [`InputActionReader`]
-/// after [`InputActionSystem`].
-pub struct InputActionPlugin<A: InputAction> {
-    _marker: PhantomData<A>,
-}
 
 /// Provides read-only access to the current state of an
 /// input action.
@@ -189,29 +180,24 @@ pub struct InputActionReader<'w, 's, A: InputAction> {
 /// Marker trait for all input actions.
 pub trait InputAction: Send + Sync + Clone + PartialEq + 'static {}
 
-impl<A: InputAction> InputActionPlugin<A> {
-    /// Returns a new input action plugin.
-    pub fn new() -> Self {
-        Self {
-            _marker: PhantomData,
-        }
-    }
+/// Extension trait for [`App`] and [`SubApp`].
+pub trait InputActionAppExt {
+    /// Adds the input action to the app.
+    ///
+    /// This will register the resources and systems
+    /// required for an input action to fully function
+    /// within an app.
+    fn add_input_action<A: InputAction>(&mut self);
 }
 
-impl<A: InputAction> Default for InputActionPlugin<A> {
-    fn default() -> Self {
-        Self::new()
-    }
-}
+impl InputActionAppExt for SubApp {
+    fn add_input_action<A: InputAction>(&mut self) {
+        self.init_resource::<internal::InputActionState<A>>();
+        self.init_resource::<internal::InputActionDrain<A>>();
 
-impl<A: InputAction> Plugin for InputActionPlugin<A> {
-    fn build(&self, app: &mut App) {
-        app.init_resource::<internal::InputActionState<A>>();
-        app.init_resource::<internal::InputActionDrain<A>>();
+        self.add_event::<internal::InputActionUpdated<A>>();
 
-        app.add_event::<internal::InputActionUpdated<A>>();
-
-        app.add_systems(
+        self.add_systems(
             PreUpdate,
             (
                 update_input_action_state::<A>,
@@ -220,6 +206,12 @@ impl<A: InputAction> Plugin for InputActionPlugin<A> {
                 .chain()
                 .in_set(InputActionSystem),
         );
+    }
+}
+
+impl InputActionAppExt for App {
+    fn add_input_action<A: InputAction>(&mut self) {
+        self.main_mut().add_input_action::<A>();
     }
 }
 
