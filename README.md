@@ -59,7 +59,7 @@ fn main() {
   App::new()
     .add_plugins(DefaultPlugins)
     .add_input_action::<Jump>()
-    .add_systems(PreUpdate, keyboard_input.after(InputSystem).before(InputActionSystem)) // properly order you systems to avoid 1 frame delay!
+    .add_systems(PreUpdate, keyboard_input.after(InputSystem).before(InputActionSystem)) // properly order your systems to avoid 1 frame delay!
     .add_systems(Update, character_jump)
     .run();
 }
