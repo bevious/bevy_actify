@@ -11,8 +11,8 @@
   </a>
   <img alt="License: MIT OR Apache-2.0" src="https://img.shields.io/badge/license-MIT%2FApache--2.0-blue" />
   <img alt="Bevy version: 0.15" src="https://img.shields.io/badge/Bevy-0.15-pink" />
-  <a href="https://github.com/bevious/bevy_actify/actions/workflows/test.yml">
-    <img alt="Action: Test" src="https://github.com/bevious/bevy_actify/actions/workflows/test.yml/badge.svg" />
+  <a href="https://github.com/bevious/bevy_actify/actions/workflows/build.yml">
+    <img alt="Action: Test" src="https://github.com/bevious/bevy_actify/actions/workflows/build.yml/badge.svg" />
   </a>
 </p>
 
