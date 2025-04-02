@@ -54,7 +54,7 @@ fn character_jump(action: InputActionState<Jump>) {
     }
 }
 
-// 4. Register the plugin and systems
+// 4. Register the input action and systems
 fn main() {
   App::new()
     .add_plugins(DefaultPlugins)
