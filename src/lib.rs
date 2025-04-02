@@ -55,16 +55,23 @@ pub use conditions::{
     input_action_active, input_action_started, input_action_stopped, input_action_updated,
 };
 
-use std::marker::PhantomData;
-
 use bevy::{
-    app::{App, Plugin, PreUpdate, SubApp},
+    app::{App, PreUpdate, SubApp},
     ecs::{
         event::{EventReader, EventWriter},
         schedule::{IntoSystemConfigs, SystemSet},
         system::{Local, Res, ResMut, SystemParam},
     },
 };
+
+/// This module re-exports all necessary things
+/// to work with an input action.
+pub mod prelude {
+    pub use super::{
+        InputAction, InputActionAppExt, InputActionDrain, InputActionReader, InputActionState,
+        InputActionStatus, InputActionSystem,
+    };
+}
 
 /// Label for systems that update input actions.
 ///
