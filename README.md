@@ -16,7 +16,7 @@
   </a>
 </p>
 
-A tiny abstraction layer for input handling in [Bevy](https://bevyengine.org/) that ecouples
+A tiny abstraction layer for input handling in [Bevy](https://bevyengine.org/) that decouples
 input sources from game logic through clean action-based interfaces.
 
 ## Problem
