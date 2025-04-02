@@ -22,13 +22,25 @@ jobs:
         run: cargo test --lib --all-features
       - name: test (release)
         run: cargo test --lib --all-features --release
-  lint:
+  rustfmt:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: rustfmt
-        run: cargo fmt --check
+      - run: rustup update stable && rustup default stable
+      - run: rustup component add rustfmt
+      - run: cargo fmt --all --check
+  clippy:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup update stable && rustup default stable
+      - run: rustup component add clippy
       - name: clippy
         run: cargo clippy --no-deps
+  rustdoc:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup update stable && rustup default stable
       - name: rustdoc
         run: cargo doc --no-deps
