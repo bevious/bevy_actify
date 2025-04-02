@@ -29,9 +29,11 @@ Raw input handling leads to:
 
 ## How to use
 
+### Example
+
 ```rust
 use bevy::{prelude::*, input::InputSystem};
-use bevy_actify::*;
+use bevy_actify::prelude::*;
 
 // 1. Define your action
 #[derive(InputAction, Clone, PartialEq)]
