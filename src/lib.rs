@@ -21,7 +21,6 @@
 //! # Core Concepts
 //!
 //! - **`InputAction`**: A trait representing an abstract input action
-//! - **`InputActionPlugin`**: Registers an action and its systems
 //! - **`InputActionState`**: Read the current state of an action
 //! - **`InputActionDrain`**: Write action state from input systems
 //! - **`InputActionReader`**: React to changes in action state
@@ -29,7 +28,7 @@
 //! # Basic Usage
 //!
 //! 1. Define your input action type (must implement `InputAction`)
-//! 2. Add the `InputActionPlugin` for your type
+//! 2. Add the input action using [`InputActionAppExt::add_input_action`]
 //! 3. Write input systems that pour values into the `InputActionDrain`
 //! 4. Read the action state using `InputActionState` (or `InputActionReader`
 //!    for status updates)
