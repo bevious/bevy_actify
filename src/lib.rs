@@ -84,22 +84,6 @@ use bevy::{
 #[derive(SystemSet, Hash, PartialEq, Eq, Clone, Debug)]
 pub struct InputActionSystem;
 
-/// Plugin that adds the input action `A` to an
-/// app.
-///
-/// This will register the resources and systems
-/// required for an input action to fully function.
-///
-/// ### Usage
-/// You can contribute to the input action via
-/// [`InputActionDrain`] before [`InputActionSystem`] in
-/// [`PreUpdate`](bevy::app::PreUpdate) and read its state
-/// via either [`InputActionState`] or [`InputActionReader`]
-/// after [`InputActionSystem`].
-pub struct InputActionPlugin<A: InputAction> {
-    _marker: PhantomData<A>,
-}
-
 /// Provides read-only access to the current state of an
 /// input action.
 ///
@@ -192,6 +176,10 @@ pub trait InputAction: Send + Sync + Clone + PartialEq + 'static {}
 /// Extension trait for [`App`] and [`SubApp`].
 pub trait InputActionAppExt {
     /// Adds the input action to the app.
+    ///
+    /// This will register the resources and systems
+    /// required for an input action to fully function
+    /// within an app.
     fn add_input_action<A: InputAction>(&mut self);
 }
 
@@ -217,40 +205,6 @@ impl InputActionAppExt for SubApp {
 impl InputActionAppExt for App {
     fn add_input_action<A: InputAction>(&mut self) {
         self.main_mut().add_input_action::<A>();
-    }
-}
-
-impl<A: InputAction> InputActionPlugin<A> {
-    /// Returns a new input action plugin.
-    pub fn new() -> Self {
-        Self {
-            _marker: PhantomData,
-        }
-    }
-}
-
-impl<A: InputAction> Default for InputActionPlugin<A> {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-impl<A: InputAction> Plugin for InputActionPlugin<A> {
-    fn build(&self, app: &mut App) {
-        app.init_resource::<internal::InputActionState<A>>();
-        app.init_resource::<internal::InputActionDrain<A>>();
-
-        app.add_event::<internal::InputActionUpdated<A>>();
-
-        app.add_systems(
-            PreUpdate,
-            (
-                update_input_action_state::<A>,
-                write_input_action_events::<A>,
-            )
-                .chain()
-                .in_set(InputActionSystem),
-        );
     }
 }
 
