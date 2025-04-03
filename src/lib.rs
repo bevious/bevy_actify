@@ -186,11 +186,11 @@ pub trait InputActionAppExt {
     /// This will register the resources and systems
     /// required for an input action to fully function
     /// within an app.
-    fn add_input_action<A: InputAction>(&mut self);
+    fn add_input_action<A: InputAction>(&mut self) -> &mut Self;
 }
 
 impl InputActionAppExt for SubApp {
-    fn add_input_action<A: InputAction>(&mut self) {
+    fn add_input_action<A: InputAction>(&mut self) -> &mut Self {
         self.init_resource::<internal::InputActionState<A>>();
         self.init_resource::<internal::InputActionDrain<A>>();
 
@@ -205,12 +205,16 @@ impl InputActionAppExt for SubApp {
                 .chain()
                 .in_set(InputActionSystem),
         );
+
+        self
     }
 }
 
 impl InputActionAppExt for App {
-    fn add_input_action<A: InputAction>(&mut self) {
+    fn add_input_action<A: InputAction>(&mut self) -> &mut Self {
         self.main_mut().add_input_action::<A>();
+
+        self
     }
 }
 
