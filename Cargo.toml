@@ -15,5 +15,5 @@ derive = ["dep:bevy_actify_derive"]
 conditions = []
 
 [dependencies]
-bevy = { version = "0.15", default-features = false }
+bevy = { version = "0.16", default-features = false }
 bevy_actify_derive = { version = "0.3.0", optional = true }

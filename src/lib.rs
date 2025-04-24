@@ -58,7 +58,7 @@ use bevy::{
     app::{App, PreUpdate, SubApp},
     ecs::{
         event::{EventReader, EventWriter},
-        schedule::{IntoSystemConfigs, SystemSet},
+        schedule::{IntoScheduleConfigs, SystemSet},
         system::{Local, Res, ResMut, SystemParam},
     },
 };
@@ -352,14 +352,14 @@ fn write_input_action_events<A: InputAction>(
     match (&*local, state) {
         (None, None) => {}
         (None, Some(value)) => {
-            event.send(internal::InputActionUpdated::Started(value.clone()));
+            event.write(internal::InputActionUpdated::Started(value.clone()));
         }
         (Some(_), None) => {
-            event.send(internal::InputActionUpdated::Stopped);
+            event.write(internal::InputActionUpdated::Stopped);
         }
         (Some(previous), Some(next)) => {
             if previous != next {
-                event.send(internal::InputActionUpdated::Updated(next.clone()));
+                event.write(internal::InputActionUpdated::Updated(next.clone()));
             }
         }
     };
@@ -370,7 +370,7 @@ fn write_input_action_events<A: InputAction>(
 mod internal {
     use std::ops::{Deref, DerefMut};
 
-    use bevy::ecs::{event::Event, system::Resource};
+    use bevy::ecs::{event::Event, resource::Resource};
 
     use crate::InputAction;
 
