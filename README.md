@@ -10,7 +10,7 @@
     <img alt="crates.io" src="https://img.shields.io/crates/v/bevy_actify" />
   </a>
   <img alt="License: MIT OR Apache-2.0" src="https://img.shields.io/badge/license-MIT%2FApache--2.0-blue" />
-  <img alt="Bevy version: 0.15" src="https://img.shields.io/badge/Bevy-0.15-pink" />
+  <img alt="Bevy version: 0.16" src="https://img.shields.io/badge/Bevy-0.16-pink" />
   <a href="https://github.com/bevious/bevy_actify/actions/workflows/cargo.yml">
     <img alt="Action: Test" src="https://github.com/bevious/bevy_actify/actions/workflows/cargo.yml/badge.svg" />
   </a>
